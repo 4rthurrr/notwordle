@@ -53,6 +53,9 @@ export const updateStats = (gameState) => {
       if (gameState.gameMode === 'daily' && stats.lastCompleted !== today) {
         stats.gamesPlayed += 1;
         
+        if (gameState.gameStatus === 'won') {
+          stats.gamesWon += 1;
+          stats.currentStreak += 1;
           stats.maxStreak = Math.max(stats.maxStreak, stats.currentStreak);
           
           // Update guess distribution
@@ -71,6 +74,11 @@ export const updateStats = (gameState) => {
         if (gameState.gameStatus === 'won') {
           stats.continuousGamesWon = (stats.continuousGamesWon || 0) + 1;
         }
+      }
+      
+      // Track hint usage for all games
+      if (gameState.usedHints && gameState.usedHints.length > 0) {
+        stats.hintsUsed = (stats.hintsUsed || 0) + gameState.usedHints.length;
       }
       
       localStorage.setItem(STATS_KEY, JSON.stringify(stats));
