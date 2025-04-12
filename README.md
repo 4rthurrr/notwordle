@@ -27,7 +27,7 @@ NotWordle is a word-guessing game inspired by the popular Wordle game. Challenge
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/your-username/notwordle.git
+git clone https://github.com/4rthurrr/notwordle.git
 cd notwordle
 ```
 
@@ -73,6 +73,3 @@ The production-ready files will be available in the `build` directory.
 - **CSS Grid/Flexbox**: For responsive layouts
 - **Dictionary API**: For word validation
 - **Local Storage**: For saving game state and statistics
-
-## 🧩 Project Structure
-
