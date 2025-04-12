@@ -1,0 +1,44 @@
+.keyboard {
+  width: 100%;
+  max-width: 500px;
+  margin-top: auto;
+  padding: 10px 0;
+}
+
+.keyboard-row {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 8px;
+}
+
+.key {
+  height: 58px;
+  border-radius: 4px;
+  background-color: #818384;
+  color: white;
+  font-size: 1rem;
+  font-weight: bold;
+  margin: 0 3px;
+  padding: 0;
+  cursor: pointer;
+  text-transform: uppercase;
+  flex: 1;
+  min-width: 20px;
+}
+
+.wide-key {
+  flex: 1.5;
+  font-size: 0.8rem;
+}
+
+.key.correct {
+  background-color: #538d4e;
+}
+
+.key.present {
+  background-color: #b59f3b;
+}
+
+.key.absent {
+  background-color: #3a3a3c;
+}
