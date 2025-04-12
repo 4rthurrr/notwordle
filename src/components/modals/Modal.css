@@ -333,3 +333,21 @@ input:disabled + .slider {
   opacity: 0.8;
   margin-top: 10px;
 }
+
+.play-again-button {
+  background-color: #538d4e;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  margin-top: 15px;
+  width: 100%;
+  max-width: 200px;
+}
+
+.play-again-button:hover {
+  background-color: #6aaa64;
+}

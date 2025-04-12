@@ -1,12 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import Grid from './Grid';
 import Keyboard from './Keyboard';
+import HintButton from './HintButton';
 import { checkWordValidity } from '../services/wordService';
 import { calculateGuessResults } from '../services/gameLogic';
+import { generateHint } from '../services/hintService';
 import './GameBoard.css';
 
 function GameBoard({ gameState, setGameState, onGameComplete }) {
   const [message, setMessage] = useState('');
+  const [hint, setHint] = useState(null);
+  const [showHint, setShowHint] = useState(false);
   const [showGiveUpConfirm, setShowGiveUpConfirm] = useState(false);
   
   const handleKeyPress = async (key) => {
@@ -73,6 +77,37 @@ function GameBoard({ gameState, setGameState, onGameComplete }) {
     }
   };
   
+  const handleHint = async () => {
+    // Close hint if already showing
+    if (showHint) {
+      setShowHint(false);
+      return;
+    }
+    
+    // Generate a hint if not already generated or if we need a new one
+    if (!hint || (gameState.hintLevel && gameState.hintLevel > hint.level)) {
+      const hintLevel = gameState.hintLevel || 1;
+      const newHint = await generateHint(
+        gameState.targetWord, 
+        hintLevel, 
+        gameState.usedHints || []
+      );
+      
+      setHint(newHint);
+      setShowHint(true);
+      
+      // Update game state to track hint usage
+      setGameState({
+        ...gameState,
+        hintLevel: hintLevel + 1,
+        usedHints: [...(gameState.usedHints || []), newHint]
+      });
+    } else {
+      // Show existing hint
+      setShowHint(true);
+    }
+  };
+  
   useEffect(() => {
     // Clear message after 2 seconds
     if (message) {
@@ -119,6 +154,15 @@ function GameBoard({ gameState, setGameState, onGameComplete }) {
       {message && <div className="message">{message}</div>}
       {endMessage && <div className="end-message">{endMessage}</div>}
       
+      {showHint && hint && (
+        <div className="hint-container">
+          <div className="hint-message">
+            <span className="hint-label">HINT:</span> {hint.text}
+            <button className="hint-close" onClick={() => setShowHint(false)}>×</button>
+          </div>
+        </div>
+      )}
+      
       <Grid 
         guesses={gameState.guesses}
         currentGuess={gameState.currentGuess}
@@ -126,13 +170,16 @@ function GameBoard({ gameState, setGameState, onGameComplete }) {
       />
       
       {gameState.gameStatus === 'playing' && (
-        <button 
-          className="give-up-button" 
-          onClick={handleGiveUp}
-          aria-label="Give up and reveal word"
-        >
-          Reveal Word
-        </button>
+        <>
+          <HintButton onHint={handleHint} showHint={showHint} />
+          <button 
+            className="give-up-button" 
+            onClick={handleGiveUp}
+            aria-label="Give up and reveal word"
+          >
+            Reveal Word
+          </button>
+        </>
       )}
       
       <Keyboard 

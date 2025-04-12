@@ -59,6 +59,31 @@ export const getTodaysWord = async (difficulty = 'normal') => {
   return wordList[Math.abs(hash)];
 };
 
+// Get a random word for continuous play
+export const getRandomWord = async (difficulty = 'normal', excludeWord = null) => {
+  let wordList;
+  
+  switch(difficulty) {
+    case 'easy':
+      wordList = EASY_WORDS;
+      break;
+    case 'hard':
+      wordList = HARD_WORDS;
+      break;
+    default:
+      wordList = await fetchFullWordList();
+  }
+  
+  // Filter out the excluded word if provided
+  if (excludeWord) {
+    wordList = wordList.filter(word => word !== excludeWord);
+  }
+  
+  // Get a random word from the list
+  const randomIndex = Math.floor(Math.random() * wordList.length);
+  return wordList[randomIndex];
+};
+
 // Check if a word is valid using Dictionary API
 export const checkWordValidity = async (word) => {
   // First check our local word list for performance

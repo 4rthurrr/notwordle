@@ -135,3 +135,53 @@
 .light-theme .cancel-button:hover {
   background-color: #5a6268;
 }
+
+.hint-container {
+  width: 100%;
+  max-width: 330px;
+  margin: 10px auto;
+  position: relative;
+}
+
+.hint-message {
+  background-color: rgba(83, 141, 78, 0.9);
+  color: white;
+  padding: 12px;
+  border-radius: 4px;
+  text-align: center;
+  font-size: 0.9rem;
+  position: relative;
+  animation: fadeIn 0.3s;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.light-theme .hint-message {
+  background-color: rgba(106, 170, 100, 0.9);
+}
+
+.hint-label {
+  font-weight: bold;
+  margin-right: 5px;
+}
+
+.hint-close {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 0;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.7;
+}
+
+.hint-close:hover {
+  opacity: 1;
+}

@@ -1,7 +1,7 @@
 import React from 'react';
 import './Header.css';
 
-function Header({ onRulesClick, onStatsClick, onSettingsClick, onThemeToggle, darkTheme }) {
+function Header({ onRulesClick, onStatsClick, onSettingsClick, onThemeToggle, darkTheme, gameMode }) {
   return (
     <header className="header">
       <div className="header-left">
@@ -9,7 +9,10 @@ function Header({ onRulesClick, onStatsClick, onSettingsClick, onThemeToggle, da
           <i className="icon icon-help">?</i>
         </button>
       </div>
-      <h1>NotWordle</h1>
+      <div className="title-container">
+        <h1>NotWordle</h1>
+        {gameMode === 'continuous' && <div className="game-mode-badge">Practice</div>}
+      </div>
       <div className="header-right">
         <button className="icon-button" onClick={onStatsClick} aria-label="Statistics">
           <i className="icon icon-stats">📊</i>

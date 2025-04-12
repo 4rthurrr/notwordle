@@ -1,7 +1,7 @@
 import React from 'react';
 import './Modal.css';
 
-function StatsModal({ onClose, stats, gameState, definition }) {
+function StatsModal({ onClose, stats, gameState, definition, onPlayAgain, gameMode }) {
   if (!stats) return null;
   
   // Calculate win percentage
@@ -106,10 +106,27 @@ function StatsModal({ onClose, stats, gameState, definition }) {
         
         {gameState.gameStatus !== 'playing' && renderDefinition()}
         
-        <div className="next-game-container">
-          <h3>NEXT WORD</h3>
-          <div className="countdown">{formatNextWordTime()}</div>
-        </div>
+        {gameMode === 'daily' ? (
+          <div className="next-game-container">
+            <h3>NEXT DAILY WORD</h3>
+            <div className="countdown">{formatNextWordTime()}</div>
+            <button className="play-again-button" onClick={() => {
+              onPlayAgain();
+              onClose();
+            }}>
+              PRACTICE MODE
+            </button>
+          </div>
+        ) : (
+          <div className="next-game-container">
+            <button className="play-again-button" onClick={() => {
+              onPlayAgain();
+              onClose();
+            }}>
+              PLAY AGAIN
+            </button>
+          </div>
+        )}
         
         <div className="share-container">
           <button className="share-button" onClick={() => {

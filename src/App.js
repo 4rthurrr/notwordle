@@ -5,7 +5,7 @@ import Header from './components/Header';
 import RulesModal from './components/modals/RulesModal';
 import StatsModal from './components/modals/StatsModal';
 import SettingsModal from './components/modals/SettingsModal';
-import { getTodaysWord } from './services/wordService';
+import { getTodaysWord, getRandomWord } from './services/wordService';
 import { loadGameState, saveGameState, getStats, updateStats } from './services/storageService';
 import Confetti from './components/Confetti';
 
@@ -19,6 +19,8 @@ function App() {
   const [showConfetti, setShowConfetti] = useState(false);
   const [definition, setDefinition] = useState(null);
   const [stats, setStats] = useState(null);
+  const [gameMode, setGameMode] = useState('daily'); // 'daily' or 'continuous'
+  const [gameCount, setGameCount] = useState(0);
 
   useEffect(() => {
     // Load theme preference
@@ -36,8 +38,9 @@ function App() {
       // Check if we already have a game for today
       const today = new Date().toISOString().slice(0, 10);
       
-      if (savedState && savedState.date === today) {
+      if (savedState && savedState.date === today && savedState.gameMode === 'daily') {
         setGameState(savedState);
+        setGameMode('daily');
         
         // If game is completed, fetch definition
         if (savedState.gameStatus !== 'playing') {
@@ -57,6 +60,11 @@ function App() {
           setShowConfetti(true);
           setGameState(prev => ({...prev, confettiShown: true}));
         }
+      } else if (savedState && savedState.gameMode === 'continuous') {
+        // Resume continuous game
+        setGameState(savedState);
+        setGameMode('continuous');
+        setGameCount(savedState.gameCount || 1);
       } else {
         // Start a new game
         const targetWord = await getTodaysWord();
@@ -68,7 +76,11 @@ function App() {
           date: today,
           hardMode: hardMode,
           confettiShown: false,
-          statsShown: false
+          statsShown: false,
+          gameMode: 'daily',
+          gameCount: 1,
+          hintLevel: 1,
+          usedHints: []
         };
         setGameState(newState);
       }
@@ -138,6 +150,33 @@ function App() {
     fetchDefinition(gameState.targetWord);
   };
 
+  const startNewGame = async () => {
+    // Get a new random word, excluding the current word
+    const newWord = await getRandomWord('normal', gameState?.targetWord);
+    
+    // Create new game state
+    const newState = {
+      targetWord: newWord,
+      guesses: [],
+      currentGuess: '',
+      gameStatus: 'playing',
+      date: new Date().toISOString(),
+      hardMode: gameState?.hardMode || false,
+      confettiShown: false,
+      statsShown: false,
+      gameMode: 'continuous',
+      gameCount: gameCount + 1,
+      hintLevel: 1,
+      usedHints: []
+    };
+    
+    setGameState(newState);
+    setShowStats(false);
+    setShowConfetti(false);
+    setDefinition(null);
+    setGameCount(prev => prev + 1);
+  };
+
   if (!gameState) return (
     <div className="loading">
       <div className="loading-spinner"></div>
@@ -152,6 +191,7 @@ function App() {
         onSettingsClick={toggleSettings}
         onThemeToggle={toggleTheme}
         darkTheme={darkTheme}
+        gameMode={gameMode}
       />
       <GameBoard 
         gameState={gameState} 
@@ -177,6 +217,8 @@ function App() {
             darkTheme={darkTheme}
             gameState={gameState}
             definition={definition}
+            onPlayAgain={startNewGame}
+            gameMode={gameMode}
           />
         </>
       )}

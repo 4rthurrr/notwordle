@@ -28,10 +28,13 @@ const initializeStats = () => {
     gamesWon: 0,
     currentStreak: 0,
     maxStreak: 0,
+    hintsUsed: 0,
     guessDistribution: {
       1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0
     },
-    lastCompleted: null
+    lastCompleted: null,
+    continuousGamesPlayed: 0,
+    continuousGamesWon: 0
   };
 };
 
@@ -44,24 +47,32 @@ export const updateStats = (gameState) => {
     
     const today = new Date().toISOString().slice(0, 10);
     
-    // Only update if this is a new game completion
-    if (gameState.gameStatus !== 'playing' && stats.lastCompleted !== today) {
-      stats.gamesPlayed += 1;
-      
-      if (gameState.gameStatus === 'won') {
-        stats.gamesWon += 1;
-        stats.currentStreak += 1;
-        stats.maxStreak = Math.max(stats.maxStreak, stats.currentStreak);
+    // Only update stats for daily games or if the game is completed
+    if (gameState.gameStatus !== 'playing') {
+      // For daily mode, only update once per day
+      if (gameState.gameMode === 'daily' && stats.lastCompleted !== today) {
+        stats.gamesPlayed += 1;
         
-        // Update guess distribution
-        const numGuesses = gameState.guesses.length;
-        stats.guessDistribution[numGuesses] += 1;
-      } else {
-        // Lost game
-        stats.currentStreak = 0;
+          stats.maxStreak = Math.max(stats.maxStreak, stats.currentStreak);
+          
+          // Update guess distribution
+          const numGuesses = gameState.guesses.length;
+          stats.guessDistribution[numGuesses] += 1;
+        } else {
+          // Lost game
+          stats.currentStreak = 0;
+        }
+        
+        stats.lastCompleted = today;
+      } 
+      // For continuous mode, always update stats
+      else if (gameState.gameMode === 'continuous') {
+        stats.continuousGamesPlayed = (stats.continuousGamesPlayed || 0) + 1;
+        if (gameState.gameStatus === 'won') {
+          stats.continuousGamesWon = (stats.continuousGamesWon || 0) + 1;
+        }
       }
       
-      stats.lastCompleted = today;
       localStorage.setItem(STATS_KEY, JSON.stringify(stats));
     }
     
