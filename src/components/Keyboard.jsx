@@ -60,6 +60,17 @@ function Keyboard({ onKeyPress, onKeyTouchStart, onKeyTouchEnd, guesses, targetW
     return className;
   };
   
+  // Add touch handling
+  const handleTouchStart = (key) => {
+    const element = document.querySelector(`[data-key="${key}"]`);
+    if (element) element.classList.add('key-active');
+  };
+
+  const handleTouchEnd = (key) => {
+    const element = document.querySelector(`[data-key="${key}"]`);
+    if (element) element.classList.remove('key-active');
+  };
+  
   return (
     <div className="keyboard">
       {rows.map((row, rowIndex) => (
@@ -69,8 +80,8 @@ function Keyboard({ onKeyPress, onKeyTouchStart, onKeyTouchEnd, guesses, targetW
               key={key} 
               className={getKeyClassName(key)}
               onClick={() => onKeyPress(key)}
-              onTouchStart={() => onKeyTouchStart(key)}
-              onTouchEnd={() => onKeyTouchEnd(key)}
+              onTouchStart={() => handleTouchStart(key)}
+              onTouchEnd={() => handleTouchEnd(key)}
               data-key={key}
             >
               {key === 'Backspace' ? '⌫' : key}

@@ -17,6 +17,7 @@
   transform: translateX(-50%);
   font-weight: bold;
   animation: fadeIn 0.2s;
+  z-index: 100;
 }
 
 .end-message {
@@ -197,6 +198,10 @@
     padding: 8px 15px;
     margin-bottom: 5px;
     font-size: 0.9rem;
+  }
+  
+  .hint-container {
+    max-width: 95%;
   }
   
   .hint-message {

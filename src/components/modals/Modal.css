@@ -438,12 +438,25 @@ input:disabled + .slider {
   .suggestions-list {
     gap: 5px;
   }
+
+  .play-again-button, .share-button {
+    padding: 8px 15px;
+    font-size: 0.9rem;
+  }
+}
+
+@media screen and (max-height: 650px) {
+  .modal {
+    padding: 12px;
+    max-height: 85vh;
+    max-height: calc(85 * var(--vh, 1vh));
+  }
 }
 
 @media screen and (max-height: 700px) {
   .modal {
     padding: 15px;
     max-height: 85vh;
-    max-height: calc(85 * var(--vh, 1vh));
+    max-height: calc(85 * var (--vh, 1vh));
   }
 }
