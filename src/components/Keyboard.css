@@ -24,6 +24,14 @@
   text-transform: uppercase;
   flex: 1;
   min-width: 20px;
+  -webkit-user-select: none;
+  user-select: none;
+  touch-action: manipulation;
+}
+
+.key-active {
+  transform: scale(0.95);
+  opacity: 0.9;
 }
 
 .wide-key {
@@ -41,4 +49,26 @@
 
 .key.absent {
   background-color: #3a3a3c;
+}
+
+@media screen and (max-height: 700px) {
+  .key {
+    height: 48px;
+    font-size: 0.9rem;
+  }
+  
+  .keyboard-row {
+    margin-bottom: 5px;
+  }
+}
+
+@media screen and (max-width: 350px) {
+  .key {
+    margin: 0 2px;
+    font-size: 0.85rem;
+  }
+  
+  .wide-key {
+    font-size: 0.7rem;
+  }
 }

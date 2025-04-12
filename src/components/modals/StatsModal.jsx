@@ -1,7 +1,7 @@
 import React from 'react';
 import './Modal.css';
 
-function StatsModal({ onClose, stats, gameState, definition, onPlayAgain, gameMode }) {
+function StatsModal({ onClose, stats, gameState, definition, onPlayAgain }) {
   if (!stats) return null;
   
   // Calculate win percentage
@@ -31,21 +31,6 @@ function StatsModal({ onClose, stats, gameState, definition, onPlayAgain, gameMo
         </div>
       );
     });
-  };
-  
-  // Format time until next word
-  const formatNextWordTime = () => {
-    const now = new Date();
-    const tomorrow = new Date(now);
-    tomorrow.setDate(now.getDate() + 1);
-    tomorrow.setHours(0, 0, 0, 0);
-    
-    const diffMs = tomorrow - now;
-    const diffHrs = Math.floor(diffMs / (1000 * 60 * 60));
-    const diffMins = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
-    const diffSecs = Math.floor((diffMs % (1000 * 60)) / 1000);
-    
-    return `${diffHrs}h ${diffMins}m ${diffSecs}s`;
   };
   
   // Render word definition if available
@@ -106,27 +91,14 @@ function StatsModal({ onClose, stats, gameState, definition, onPlayAgain, gameMo
         
         {gameState.gameStatus !== 'playing' && renderDefinition()}
         
-        {gameMode === 'daily' ? (
-          <div className="next-game-container">
-            <h3>NEXT DAILY WORD</h3>
-            <div className="countdown">{formatNextWordTime()}</div>
-            <button className="play-again-button" onClick={() => {
-              onPlayAgain();
-              onClose();
-            }}>
-              PRACTICE MODE
-            </button>
-          </div>
-        ) : (
-          <div className="next-game-container">
-            <button className="play-again-button" onClick={() => {
-              onPlayAgain();
-              onClose();
-            }}>
-              PLAY AGAIN
-            </button>
-          </div>
-        )}
+        <div className="next-game-container">
+          <button className="play-again-button" onClick={() => {
+            onPlayAgain();
+            onClose();
+          }}>
+            PLAY AGAIN
+          </button>
+        </div>
         
         <div className="share-container">
           <button className="share-button" onClick={() => {

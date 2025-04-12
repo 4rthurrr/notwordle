@@ -4,11 +4,26 @@
   gap: 5px;
   margin: auto;
   width: 330px;
+  max-width: 95vw;
   height: 390px;
+  max-height: calc(60 * var(--vh, 1vh));
 }
 
 .row {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   gap: 5px;
+}
+
+@media screen and (max-height: 700px) {
+  .grid {
+    height: 330px;
+  }
+}
+
+@media screen and (max-width: 350px) {
+  .grid {
+    width: 290px;
+    gap: 4px;
+  }
 }

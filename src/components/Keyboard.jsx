@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { calculateGuessResults } from '../services/gameLogic';
 import './Keyboard.css';
 
-function Keyboard({ onKeyPress, guesses, targetWord }) {
+function Keyboard({ onKeyPress, onKeyTouchStart, onKeyTouchEnd, guesses, targetWord }) {
   // Define keyboard layout
   const rows = [
     ['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p'],
@@ -69,6 +69,9 @@ function Keyboard({ onKeyPress, guesses, targetWord }) {
               key={key} 
               className={getKeyClassName(key)}
               onClick={() => onKeyPress(key)}
+              onTouchStart={() => onKeyTouchStart(key)}
+              onTouchEnd={() => onKeyTouchEnd(key)}
+              data-key={key}
             >
               {key === 'Backspace' ? '⌫' : key}
             </button>

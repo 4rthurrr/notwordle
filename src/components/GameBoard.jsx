@@ -77,6 +77,23 @@ function GameBoard({ gameState, setGameState, onGameComplete }) {
     }
   };
   
+  // Add touch feedback for mobile
+  const handleKeyTouchStart = (key) => {
+    // Find the key element
+    const keyElement = document.querySelector(`[data-key="${key}"]`);
+    if (keyElement) {
+      keyElement.classList.add('key-active');
+    }
+  };
+  
+  const handleKeyTouchEnd = (key) => {
+    // Remove active state from key
+    const keyElement = document.querySelector(`[data-key="${key}"]`);
+    if (keyElement) {
+      keyElement.classList.remove('key-active');
+    }
+  };
+
   const handleHint = async () => {
     // Close hint if already showing
     if (showHint) {
@@ -184,6 +201,8 @@ function GameBoard({ gameState, setGameState, onGameComplete }) {
       
       <Keyboard 
         onKeyPress={handleKeyPress}
+        onKeyTouchStart={handleKeyTouchStart}
+        onKeyTouchEnd={handleKeyTouchEnd}
         guesses={gameState.guesses}
         targetWord={gameState.targetWord}
       />

@@ -32,6 +32,31 @@ const fetchFullWordList = async () => {
   return WORD_LIST;
 };
 
+// Get a random word, optionally excluding a specific word
+export const getRandomWord = async (excludeWord = null, difficulty = 'normal') => {
+  let wordList;
+  
+  switch(difficulty) {
+    case 'easy':
+      wordList = EASY_WORDS;
+      break;
+    case 'hard':
+      wordList = HARD_WORDS;
+      break;
+    default:
+      wordList = await fetchFullWordList();
+  }
+  
+  // Filter out the excluded word if provided
+  if (excludeWord) {
+    wordList = wordList.filter(word => word !== excludeWord);
+  }
+  
+  // Get a random word from the list
+  const randomIndex = Math.floor(Math.random() * wordList.length);
+  return wordList[randomIndex];
+};
+
 // Select a daily word based on date
 export const getTodaysWord = async (difficulty = 'normal') => {
   let wordList;
@@ -57,31 +82,6 @@ export const getTodaysWord = async (difficulty = 'normal') => {
   // Combine date components with prime numbers for better distribution
   const hash = (year * 37 + month * 31 + day * 41) % wordList.length;
   return wordList[Math.abs(hash)];
-};
-
-// Get a random word for continuous play
-export const getRandomWord = async (difficulty = 'normal', excludeWord = null) => {
-  let wordList;
-  
-  switch(difficulty) {
-    case 'easy':
-      wordList = EASY_WORDS;
-      break;
-    case 'hard':
-      wordList = HARD_WORDS;
-      break;
-    default:
-      wordList = await fetchFullWordList();
-  }
-  
-  // Filter out the excluded word if provided
-  if (excludeWord) {
-    wordList = wordList.filter(word => word !== excludeWord);
-  }
-  
-  // Get a random word from the list
-  const randomIndex = Math.floor(Math.random() * wordList.length);
-  return wordList[randomIndex];
 };
 
 // Check if a word is valid using Dictionary API

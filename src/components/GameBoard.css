@@ -185,3 +185,22 @@
 .hint-close:hover {
   opacity: 1;
 }
+
+@media screen and (max-width: 500px) {
+  .message {
+    top: 60px;
+    font-size: 0.9rem;
+    padding: 8px 15px;
+  }
+
+  .end-message {
+    padding: 8px 15px;
+    margin-bottom: 5px;
+    font-size: 0.9rem;
+  }
+  
+  .hint-message {
+    padding: 10px;
+    font-size: 0.85rem;
+  }
+}

@@ -5,7 +5,7 @@ import Header from './components/Header';
 import RulesModal from './components/modals/RulesModal';
 import StatsModal from './components/modals/StatsModal';
 import SettingsModal from './components/modals/SettingsModal';
-import { getTodaysWord, getRandomWord } from './services/wordService';
+import { getRandomWord } from './services/wordService';
 import { loadGameState, saveGameState, getStats, updateStats } from './services/storageService';
 import Confetti from './components/Confetti';
 
@@ -19,8 +19,7 @@ function App() {
   const [showConfetti, setShowConfetti] = useState(false);
   const [definition, setDefinition] = useState(null);
   const [stats, setStats] = useState(null);
-  const [gameMode, setGameMode] = useState('daily'); // 'daily' or 'continuous'
-  const [gameCount, setGameCount] = useState(0);
+  const [gameCount, setGameCount] = useState(1);
 
   useEffect(() => {
     // Load theme preference
@@ -29,18 +28,22 @@ function App() {
       setDarkTheme(savedTheme === 'dark');
     }
     
+    // Check if first visit
+    const hasVisitedBefore = localStorage.getItem('notwordle_visited');
+    if (!hasVisitedBefore) {
+      // Show rules on first visit
+      setShowRules(true);
+      localStorage.setItem('notwordle_visited', 'true');
+    }
+    
     const initGame = async () => {
       // Try to load saved game state
       const savedState = loadGameState();
       const savedStats = getStats();
       setStats(savedStats);
       
-      // Check if we already have a game for today
-      const today = new Date().toISOString().slice(0, 10);
-      
-      if (savedState && savedState.date === today && savedState.gameMode === 'daily') {
+      if (savedState) {
         setGameState(savedState);
-        setGameMode('daily');
         
         // If game is completed, fetch definition
         if (savedState.gameStatus !== 'playing') {
@@ -48,7 +51,7 @@ function App() {
         }
         
         // Show stats if game is over
-        if (savedState.gameStatus !== 'playing' && !showStats && !savedState.statsShown) {
+        if (savedState.gameStatus !== 'playing' && !savedState.statsShown) {
           setTimeout(() => {
             setShowStats(true);
             setGameState(prev => ({...prev, statsShown: true}));
@@ -60,24 +63,18 @@ function App() {
           setShowConfetti(true);
           setGameState(prev => ({...prev, confettiShown: true}));
         }
-      } else if (savedState && savedState.gameMode === 'continuous') {
-        // Resume continuous game
-        setGameState(savedState);
-        setGameMode('continuous');
-        setGameCount(savedState.gameCount || 1);
       } else {
         // Start a new game
-        const targetWord = await getTodaysWord();
+        const targetWord = await getRandomWord();
         const newState = {
           targetWord,
           guesses: [],
           currentGuess: '',
-          gameStatus: 'playing', // 'playing', 'won', 'lost'
-          date: today,
+          gameStatus: 'playing',
+          date: new Date().toISOString(),
           hardMode: hardMode,
           confettiShown: false,
           statsShown: false,
-          gameMode: 'daily',
           gameCount: 1,
           hintLevel: 1,
           usedHints: []
@@ -87,7 +84,7 @@ function App() {
     };
 
     initGame();
-  }, []);
+  }, [hardMode]);
 
   // Update body class when theme changes
   useEffect(() => {
@@ -152,7 +149,7 @@ function App() {
 
   const startNewGame = async () => {
     // Get a new random word, excluding the current word
-    const newWord = await getRandomWord('normal', gameState?.targetWord);
+    const newWord = await getRandomWord(gameState?.targetWord);
     
     // Create new game state
     const newState = {
@@ -164,7 +161,6 @@ function App() {
       hardMode: gameState?.hardMode || false,
       confettiShown: false,
       statsShown: false,
-      gameMode: 'continuous',
       gameCount: gameCount + 1,
       hintLevel: 1,
       usedHints: []
@@ -191,7 +187,6 @@ function App() {
         onSettingsClick={toggleSettings}
         onThemeToggle={toggleTheme}
         darkTheme={darkTheme}
-        gameMode={gameMode}
       />
       <GameBoard 
         gameState={gameState} 
@@ -218,7 +213,6 @@ function App() {
             gameState={gameState}
             definition={definition}
             onPlayAgain={startNewGame}
-            gameMode={gameMode}
           />
         </>
       )}

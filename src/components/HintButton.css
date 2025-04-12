@@ -29,3 +29,22 @@
   background-color: #6aaa64;
   color: white;
 }
+
+/* Mobile optimizations */
+@media screen and (max-width: 500px) {
+  .hint-button {
+    padding: 10px 16px;
+    margin: 10px 0;
+  }
+}
+
+@media (hover: hover) {
+  .hint-button:hover {
+    background-color: #538d4e;
+  }
+  
+  .light-theme .hint-button:hover {
+    background-color: #6aaa64;
+    color: white;
+  }
+}

@@ -73,8 +73,71 @@
   padding: 2px 8px;
   border-radius: 10px;
   margin-top: -5px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  transition: background-color 0.2s;
+}
+
+.game-mode-badge:hover {
+  background-color: #c9b458;
+}
+
+.exit-badge {
+  margin-left: 5px;
+  font-weight: bold;
+  font-size: 0.9rem;
 }
 
 .light-theme .game-mode-badge {
   background-color: #6aaa64;
+}
+
+.light-theme .game-mode-badge:hover {
+  background-color: #b59f3b;
+}
+
+@media screen and (max-width: 480px) {
+  .header {
+    padding: 8px 10px;
+  }
+  
+  .header h1 {
+    font-size: 1.5rem;
+  }
+  
+  .icon-button {
+    width: 34px;
+    height: 34px;
+    font-size: 1rem;
+    padding: 4px;
+    margin: 0 3px;
+  }
+  
+  .header-left, .header-right {
+    min-width: 60px; /* Ensure there's enough room on both sides */
+  }
+}
+
+@media screen and (max-width: 360px) {
+  .header h1 {
+    font-size: 1.3rem;
+  }
+  
+  .icon-button {
+    width: 30px;
+    height: 30px;
+    margin: 0 2px;
+  }
+}
+
+/* Fix for phones in landscape mode */
+@media screen and (max-height: 450px) {
+  .header {
+    padding: 5px 10px;
+  }
+  
+  .header h1 {
+    font-size: 1.3rem;
+  }
 }

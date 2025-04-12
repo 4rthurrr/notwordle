@@ -32,9 +32,7 @@ const initializeStats = () => {
     guessDistribution: {
       1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0
     },
-    lastCompleted: null,
-    continuousGamesPlayed: 0,
-    continuousGamesWon: 0
+    lastCompleted: null
   };
 };
 
@@ -45,38 +43,26 @@ export const updateStats = (gameState) => {
     const savedStatsString = localStorage.getItem(STATS_KEY);
     const stats = savedStatsString ? JSON.parse(savedStatsString) : initializeStats();
     
-    const today = new Date().toISOString().slice(0, 10);
-    
-    // Only update stats for daily games or if the game is completed
+    // Only update if this game is completed
     if (gameState.gameStatus !== 'playing') {
-      // For daily mode, only update once per day
-      if (gameState.gameMode === 'daily' && stats.lastCompleted !== today) {
-        stats.gamesPlayed += 1;
+      stats.gamesPlayed += 1;
+      
+      if (gameState.gameStatus === 'won') {
+        stats.gamesWon += 1;
+        stats.currentStreak += 1;
+        stats.maxStreak = Math.max(stats.maxStreak, stats.currentStreak);
         
-        if (gameState.gameStatus === 'won') {
-          stats.gamesWon += 1;
-          stats.currentStreak += 1;
-          stats.maxStreak = Math.max(stats.maxStreak, stats.currentStreak);
-          
-          // Update guess distribution
-          const numGuesses = gameState.guesses.length;
-          stats.guessDistribution[numGuesses] += 1;
-        } else {
-          // Lost game
-          stats.currentStreak = 0;
-        }
-        
-        stats.lastCompleted = today;
-      } 
-      // For continuous mode, always update stats
-      else if (gameState.gameMode === 'continuous') {
-        stats.continuousGamesPlayed = (stats.continuousGamesPlayed || 0) + 1;
-        if (gameState.gameStatus === 'won') {
-          stats.continuousGamesWon = (stats.continuousGamesWon || 0) + 1;
-        }
+        // Update guess distribution
+        const numGuesses = gameState.guesses.length;
+        stats.guessDistribution[numGuesses] += 1;
+      } else {
+        // Lost game
+        stats.currentStreak = 0;
       }
       
-      // Track hint usage for all games
+      stats.lastCompleted = new Date().toISOString();
+      
+      // Track hint usage
       if (gameState.usedHints && gameState.usedHints.length > 0) {
         stats.hintsUsed = (stats.hintsUsed || 0) + gameState.usedHints.length;
       }
