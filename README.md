@@ -2,7 +2,10 @@
 
 NotWordle is a word-guessing game inspired by the popular Wordle game. Challenge yourself to guess a 5-letter word within 6 attempts, with color-coded feedback after each guess.
 
-![NotWordle Game Screenshot](public/screenshot.png)
+![image](https://github.com/user-attachments/assets/9b064f95-0470-4ad7-8268-ecb06f4c1eca)
+
+![image](https://github.com/user-attachments/assets/50340524-a113-4002-910e-ab925ddb51f6)
+
 
 ## 🎮 Features
 
